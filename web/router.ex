@@ -7,5 +7,7 @@ defmodule Badging.Router do
 
   scope "/api", Badging do
     pipe_through :api
+
+    resources "/badges", BadgeController, except: [:new, :edit]
   end
 end
