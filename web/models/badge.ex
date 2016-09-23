@@ -7,6 +7,7 @@ defmodule Badging.Badge do
     field :status, :string
     field :color, :string
     field :svg, :string
+    field :svg_downloaded_at, Ecto.DateTime
 
     timestamps()
   end
@@ -17,6 +18,6 @@ defmodule Badging.Badge do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:identifier, :subject, :status, :color, :svg])
-    |> validate_required([:identifier, :subject, :status, :color, :svg])
+    |> validate_required([:identifier, :subject, :status, :color])
   end
 end

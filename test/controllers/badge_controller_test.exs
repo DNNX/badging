@@ -3,7 +3,7 @@ defmodule Badging.BadgeControllerTest do
 
   alias Badging.Badge
   @valid_attrs %{color: "some content", identifier: "some content", status: "some content", subject: "some content", svg: "some content"}
-  @invalid_attrs %{}
+  @invalid_attrs %{color: ""}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -15,7 +15,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    badge = Repo.insert! %Badge{}
+    badge = Repo.insert! valid_badge
     conn = get conn, badge_path(conn, :show, badge)
     assert json_response(conn, 200)["data"] == %{"id" => badge.id,
       "identifier" => badge.identifier,
@@ -43,22 +43,31 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    badge = Repo.insert! %Badge{}
+    badge = Repo.insert! valid_badge
     conn = put conn, badge_path(conn, :update, badge), badge: @valid_attrs
     assert json_response(conn, 200)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    badge = Repo.insert! %Badge{}
+    badge = Repo.insert! valid_badge
     conn = put conn, badge_path(conn, :update, badge), badge: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    badge = Repo.insert! %Badge{}
+    badge = Repo.insert! valid_badge
     conn = delete conn, badge_path(conn, :delete, badge)
     assert response(conn, 204)
     refute Repo.get(Badge, badge.id)
+  end
+
+  defp valid_badge do
+    %Badge{
+      identifier: "coverage",
+      subject: "Coverage",
+      status: "83%",
+      color: "yellow"
+    }
   end
 end
