@@ -2,7 +2,7 @@ defmodule Badging.BadgeControllerTest do
   use Badging.ConnCase
 
   alias Badging.Badge
-  @valid_attrs %{color: "some content", identifier: "some content", status: "some content", subject: "some content", svg: "some content"}
+  @valid_attrs %{color: "some content", identifier: "some content", status: "some content", subject: "some content"}
   @invalid_attrs %{color: ""}
 
   setup %{conn: conn} do

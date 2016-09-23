@@ -21,4 +21,10 @@ defmodule Badging.BadgeTest do
     changeset = Badge.changeset(%Badge{}, Map.put(@valid_attrs, :identifier, ""))
     refute changeset.valid?
   end
+
+  test "svg changeset" do
+    changeset = Badge.svg_changeset(%Badge{identifier: "i18n"}, %{svg: "<svg />"})
+    assert changeset.valid?
+    assert %Ecto.DateTime{} = changeset.changes.svg_updated_at
+  end
 end
