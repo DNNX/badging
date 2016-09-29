@@ -4,8 +4,10 @@ defmodule Badging.Downloader do
 
   ## Examples:
 
-    iex> Badging.Downloader.download("https://gist.githubusercontent.com/DNNX/6700de6ad99f87b16398ddb73446bdaa/raw/ca257e60b55cf8c9f0952119c90f3bd7828ddb07/test.txt")
-    "this is a test"
+    iex> {:ok, _pid} = HelloWorldWebServer.start(8081)
+    iex> Badging.Downloader.download("http://localhost:8081/greet")
+    "Hello, World!"
+
   """
   def download(url) do
     {:ok, resp} = :httpc.request(:get, {to_char_list(url), []}, [], [body_format: :binary])
