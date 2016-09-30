@@ -13,8 +13,33 @@ use Mix.Config
 # which you typically run after static files are built.
 config :badging, Badging.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  url: [scheme: "https", host: "badging.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
+  cache_static_manifest: "priv/static/manifest.json",
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
+
+config :badging, Badging.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
+
+read_auth_password = System.get_env("READ_AUTH_PASSWORD") || raise "READ_AUTH_PASSWORD is not set"
+IO.inspect(read_auth_password)
+
+config :badging, :read_auth, [
+  realm: "Restricted Area",
+  username: "user",
+  password: read_auth_password
+]
+
+write_auth_password = System.get_env("WRITE_AUTH_PASSWORD") || raise "WRITE_AUTH_PASSWORD is not set"
+
+config :badging, :write_auth, [
+  realm: "Restricted Area",
+  username: "user",
+  password: write_auth_password
+]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -59,7 +84,3 @@ config :logger, level: :info
 # for the new static assets to be served after a hot upgrade:
 #
 #     config :badging, Badging.Endpoint, root: "."
-
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-import_config "prod.secret.exs"
