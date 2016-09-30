@@ -10,4 +10,8 @@ defmodule Badging.Router do
 
     resources "/badges", BadgeController, except: [:new, :edit]
   end
+
+  scope "/", Badging do
+    get "/badges/:identifier_with_dot_svg", BadgeController, :show_svg
+  end
 end

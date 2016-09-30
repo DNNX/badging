@@ -29,6 +29,18 @@ defmodule Badging.BadgeController do
     render(conn, "show.json", badge: badge)
   end
 
+  def show_svg(conn, %{"identifier_with_dot_svg" => identifier_with_dot_svg}) do
+    identifier = String.trim_trailing(identifier_with_dot_svg, ".svg")
+    badge = Repo.one!(
+      from b in Badge,
+      where: not(is_nil(b.svg)) and b.identifier == ^identifier,
+      select: struct(b, [:svg, :svg_downloaded_at]))
+
+    conn
+    |> put_resp_content_type("image/svg+xml", nil)
+    |> send_resp(200, badge.svg)
+  end
+
   def update(conn, %{"id" => id, "badge" => badge_params}) do
     badge = Repo.get!(Badge, id)
     changeset = Badge.changeset(badge, badge_params)

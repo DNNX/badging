@@ -25,6 +25,23 @@ defmodule Badging.BadgeControllerTest do
       "svg" => badge.svg}
   end
 
+  test "renders SVG when it's available", %{conn: conn} do
+    Repo.insert! valid_badge_with_svg
+
+    conn = get conn, "/badges/coverage.svg"
+
+    assert conn.resp_body == "<svg />"
+    assert get_header(conn, "content-type") == "image/svg+xml"
+  end
+
+  test "renders 404 when SVG is not available", %{conn: conn} do
+    Repo.insert! valid_badge
+
+    assert_error_sent 404, fn ->
+      get conn, "/badges/coverage.svg"
+    end
+  end
+
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
       get conn, badge_path(conn, :show, -1)
@@ -69,5 +86,28 @@ defmodule Badging.BadgeControllerTest do
       status: "83%",
       color: "yellow"
     }
+  end
+
+  defp valid_badge_with_svg do
+    %Badge{
+      identifier: "coverage",
+      subject: "Coverage",
+      status: "83%",
+      color: "yellow",
+      svg: "<svg />",
+      svg_downloaded_at: now
+    }
+  end
+
+  defp get_header(conn, header_name) do
+    conn.resp_headers
+    |> Enum.find_value(fn
+      {^header_name, value} -> value
+      _ -> nil
+    end)
+  end
+
+  defp now do
+    Ecto.DateTime.from_erl(:calendar.universal_time)
   end
 end
