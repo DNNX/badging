@@ -13,5 +13,6 @@ defmodule Badging.Repo.Migrations.CreateBadge do
       timestamps()
     end
 
+    create unique_index(:badges, [:identifier])
   end
 end

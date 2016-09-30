@@ -1,6 +1,7 @@
 defmodule Badging.Badge do
   use Badging.Web, :model
 
+  @derive {Phoenix.Param, key: :identifier}
   schema "badges" do
     field :identifier, :string
     field :subject, :string
@@ -19,6 +20,7 @@ defmodule Badging.Badge do
     struct
     |> cast(params, [:identifier, :subject, :status, :color])
     |> validate_required([:identifier, :subject, :status, :color])
+    |> unique_constraint(:identifier)
   end
 
   @doc """

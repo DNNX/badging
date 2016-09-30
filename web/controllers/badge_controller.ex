@@ -24,16 +24,18 @@ defmodule Badging.BadgeController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    badge = Repo.get!(Badge, id)
-    render(conn, "show.json", badge: badge)
+  def show(conn, %{"id" => identifier}) do
+    if String.ends_with?(identifier, ".svg") do
+      respond_with_svg(conn, String.trim_trailing(identifier, ".svg"))
+    else
+      respond_with_json(conn, identifier)
+    end
   end
 
-  def show_svg(conn, %{"identifier_with_dot_svg" => identifier_with_dot_svg}) do
-    identifier = String.trim_trailing(identifier_with_dot_svg, ".svg")
+  defp respond_with_svg(conn, badge_identifier) do
     badge = Repo.one!(
       from b in Badge,
-      where: not(is_nil(b.svg)) and b.identifier == ^identifier,
+      where: not(is_nil(b.svg)) and b.identifier == ^badge_identifier,
       select: struct(b, [:svg, :svg_downloaded_at]))
 
     conn
@@ -41,8 +43,14 @@ defmodule Badging.BadgeController do
     |> send_resp(200, badge.svg)
   end
 
-  def update(conn, %{"id" => id, "badge" => badge_params}) do
-    badge = Repo.get!(Badge, id)
+  defp respond_with_json(conn, badge_identifier) do
+    badge = Repo.get_by!(Badge, identifier: badge_identifier)
+
+    render(conn, "show.json", badge: badge)
+  end
+
+  def update(conn, %{"id" => identifier, "badge" => badge_params}) do
+    badge = Repo.get_by!(Badge, identifier: identifier)
     changeset = Badge.changeset(badge, badge_params)
 
     case Repo.update(changeset) do
@@ -55,8 +63,8 @@ defmodule Badging.BadgeController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    badge = Repo.get!(Badge, id)
+  def delete(conn, %{"id" => identifier}) do
+    badge = Repo.get_by!(Badge, identifier: identifier)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
