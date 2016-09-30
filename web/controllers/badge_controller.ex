@@ -9,7 +9,7 @@ defmodule Badging.BadgeController do
   plug BasicAuth, Application.get_env(:badging, :read_auth) when not action in @write_actions
   plug BasicAuth, Application.get_env(:badging, :write_auth) when action in @write_actions
 
-  alias Badging.Badge
+  alias Badging.{Badge,Downloader}
 
   def index(conn, _params) do
     badges = Repo.all(Badge)
@@ -21,6 +21,8 @@ defmodule Badging.BadgeController do
 
     case Repo.insert(changeset) do
       {:ok, badge} ->
+        download_svg_async(badge)
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", badge_path(conn, :show, badge))
@@ -63,6 +65,7 @@ defmodule Badging.BadgeController do
 
     case Repo.update(changeset) do
       {:ok, badge} ->
+        download_svg_async(badge)
         render(conn, "show.json", badge: badge)
       {:error, changeset} ->
         conn
@@ -79,5 +82,17 @@ defmodule Badging.BadgeController do
     Repo.delete!(badge)
 
     send_resp(conn, :no_content, "")
+  end
+
+  defp download_svg_async(%Badge{} = badge) do
+    Task.Supervisor.start_child Badging.SvgDownloaderSupervisor, fn ->
+      svg =
+        badge
+        |> Badge.shieldsio_url
+        |> Downloader.download
+
+      changeset = Badge.svg_changeset(badge, %{svg: svg})
+      Repo.update!(changeset)
+    end
   end
 end

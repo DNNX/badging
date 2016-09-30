@@ -29,8 +29,20 @@ defmodule Badging.Badge do
   """
   def svg_changeset(struct, params) do
     struct
-    |> cast(params, [:svg])
+    |> cast(params, [:svg, :svg_downloaded_at])
+    |> put_change(:svg_downloaded_at, Ecto.DateTime.utc(:usec))
     |> validate_required([:svg])
-    |> put_change(:svg_updated_at, Ecto.DateTime.utc(:usec))
+  end
+
+  def shieldsio_url(%__MODULE__{subject: subject, status: status, color: color})
+    when is_binary(subject) and is_binary(status) and is_binary(color) do
+    "https://img.shields.io/badge/#{escape subject}-#{escape status}-#{escape color}.svg"
+  end
+
+  defp escape(str) do
+    str
+    |> String.replace("-", "--")
+    |> String.replace("_", "__")
+    |> String.replace(" ", "_")
   end
 end

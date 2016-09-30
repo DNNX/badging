@@ -1,5 +1,6 @@
 defmodule Badging.BadgeTest do
   use Badging.ModelCase, async: true
+  doctest Badging.Badge
 
   alias Badging.Badge
 
@@ -25,6 +26,6 @@ defmodule Badging.BadgeTest do
   test "svg changeset" do
     changeset = Badge.svg_changeset(%Badge{identifier: "i18n"}, %{svg: "<svg />"})
     assert changeset.valid?
-    assert %Ecto.DateTime{} = changeset.changes.svg_updated_at
+    assert %Ecto.DateTime{} = changeset.changes.svg_downloaded_at
   end
 end
