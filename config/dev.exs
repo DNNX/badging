@@ -29,3 +29,15 @@ config :badging, Badging.Repo,
   database: "badging_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :badging, :read_auth, [
+  realm: "Restricted Area",
+  username: "user",
+  password: "DREA&DPASS0DR"
+]
+
+config :badging, :write_auth, [
+  realm: "Restricted Area",
+  username: "user",
+  password: "DQEA&DPASS0DR"
+]

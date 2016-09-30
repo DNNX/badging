@@ -10,13 +10,22 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get conn, badge_path(conn, :index)
+    conn =
+      conn
+      |> authenticated(:read_auth)
+      |> get("/badges")
+
     assert json_response(conn, 200)["data"] == []
   end
 
   test "shows chosen resource", %{conn: conn} do
     badge = Repo.insert! valid_badge
-    conn = get conn, badge_path(conn, :show, badge)
+
+    conn =
+      conn
+      |> authenticated(:read_auth)
+      |> get("/badges/coverage")
+
     assert json_response(conn, 200)["data"] == %{"id" => badge.id,
       "identifier" => badge.identifier,
       "subject" => badge.subject,
@@ -28,7 +37,10 @@ defmodule Badging.BadgeControllerTest do
   test "renders SVG when it's available", %{conn: conn} do
     Repo.insert! valid_badge_with_svg
 
-    conn = get conn, "/badges/coverage.svg"
+    conn =
+      conn
+      |> authenticated(:read_auth)
+      |> get("/badges/coverage.svg")
 
     assert conn.resp_body == "<svg />"
     assert get_header(conn, "content-type") == "image/svg+xml"
@@ -38,45 +50,72 @@ defmodule Badging.BadgeControllerTest do
     Repo.insert! valid_badge
 
     assert_error_sent 404, fn ->
-      get conn, "/badges/coverage.svg"
+      conn
+      |> authenticated(:read_auth)
+      |> get("/badges/coverage.svg")
     end
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get conn, badge_path(conn, :show, -1)
+      conn
+      |> authenticated(:read_auth)
+      |> get("/badges/dont_exist")
     end
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
-    conn = post conn, badge_path(conn, :create), badge: @valid_attrs
+    conn =
+      conn
+      |> authenticated(:write_auth)
+      |> post("/badges", badge: @valid_attrs)
+
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, badge_path(conn, :create), badge: @invalid_attrs
+    conn =
+      conn
+      |> authenticated(:write_auth)
+      |> post("/badges", badge: @invalid_attrs)
+
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    badge = Repo.insert! valid_badge
-    conn = put conn, badge_path(conn, :update, badge), badge: @valid_attrs
+    Repo.insert! valid_badge
+
+    conn =
+      conn
+      |> authenticated(:write_auth)
+      |> put("/badges/coverage", badge: @valid_attrs)
+
     assert json_response(conn, 200)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    badge = Repo.insert! valid_badge
-    conn = put conn, badge_path(conn, :update, badge), badge: @invalid_attrs
+     Repo.insert! valid_badge
+
+    conn =
+      conn
+      |> authenticated(:write_auth)
+      |> put("/badges/coverage", badge: @invalid_attrs)
+
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    badge = Repo.insert! valid_badge
-    conn = delete conn, badge_path(conn, :delete, badge)
+    Repo.insert! valid_badge
+
+    conn =
+      conn
+      |> authenticated(:write_auth)
+      |> delete("/badges/coverage")
+
     assert response(conn, 204)
-    refute Repo.get(Badge, badge.id)
+    refute Repo.one(Badge, identifier: "coverage")
   end
 
   defp valid_badge do
@@ -109,5 +148,15 @@ defmodule Badging.BadgeControllerTest do
 
   defp now do
     Ecto.DateTime.from_erl(:calendar.universal_time)
+  end
+
+  defp authenticated(conn, auth_key) do
+    config = Application.get_env(:badging, auth_key)
+    username = Keyword.fetch!(config, :username)
+    password = Keyword.fetch!(config, :password)
+
+    header_content = "Basic " <> Base.encode64("#{username}:#{password}")
+
+    put_req_header(conn, "authorization", header_content)
   end
 end

@@ -1,6 +1,11 @@
 defmodule Badging.BadgeController do
   use Badging.Web, :controller
 
+  @write_actions [:create, :update, :delete]
+
+  plug BasicAuth, Application.get_env(:badging, :read_auth) when not action in @write_actions
+  plug BasicAuth, Application.get_env(:badging, :write_auth) when action in @write_actions
+
   alias Badging.Badge
 
   def index(conn, _params) do
