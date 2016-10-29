@@ -34,6 +34,18 @@ defmodule Badging.Badge do
     |> validate_required([:svg])
   end
 
+  @doc """
+  Generates a shields.io URL to the SVG badge.
+
+  ## Examples
+
+      iex> Badging.Badge.shieldsio_url(%Badging.Badge{
+      ...>   subject: "RSpec To Minitest Migration",
+      ...>   color: "yellow",
+      ...>   status: "almost_done"
+      ...> })
+      "https://img.shields.io/badge/RSpec_To_Minitest_Migration-almost__done-yellow.svg"
+  """
   def shieldsio_url(%__MODULE__{subject: subject, status: status, color: color})
     when is_binary(subject) and is_binary(status) and is_binary(color) do
     "https://img.shields.io/badge/#{escape subject}-#{escape status}-#{escape color}.svg"
