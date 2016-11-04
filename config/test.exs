@@ -26,3 +26,5 @@ config :badging, :write_auth, [
   username: "user",
   password: "QEA&DPASS0DR"
 ]
+
+config :badging, :downloader, Badging.StubbedDownloader

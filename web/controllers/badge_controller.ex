@@ -3,6 +3,7 @@ defmodule Badging.BadgeController do
 
   alias Badging.{Badge,Downloader}
 
+  @downloader Application.get_env(:badging, :downloader, Downloader)
   @write_actions [:create, :update, :delete]
 
   plug BasicAuth, Application.get_env(:badging, :read_auth)
@@ -88,7 +89,7 @@ defmodule Badging.BadgeController do
       svg =
         badge
         |> Badge.shieldsio_url
-        |> Downloader.download
+        |> @downloader.download
 
       changeset = Badge.svg_changeset(badge, %{svg: svg})
       Repo.update!(changeset)
