@@ -1,15 +1,14 @@
 defmodule Badging.BadgeController do
   use Badging.Web, :controller
 
-  @write_actions [:create, :update, :delete]
-  @x {System.get_env, Application.get_env(:badging, :read_auth), Application.get_env(:badging, :read_auth)}
-
-  def x, do: @x
-
-  plug BasicAuth, Application.get_env(:badging, :read_auth) when not action in @write_actions
-  plug BasicAuth, Application.get_env(:badging, :write_auth) when action in @write_actions
-
   alias Badging.{Badge,Downloader}
+
+  @write_actions [:create, :update, :delete]
+
+  plug BasicAuth, Application.get_env(:badging, :read_auth)
+    when not action in @write_actions
+  plug BasicAuth, Application.get_env(:badging, :write_auth)
+    when action in @write_actions
 
   def index(conn, _params) do
     badges = Repo.all(Badge)

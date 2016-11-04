@@ -1,6 +1,8 @@
 defmodule Badging.Badge do
   use Badging.Web, :model
 
+  alias Ecto.DateTime
+
   @moduledoc """
   Badging.Badge is a core model of the application. It represents an information
   about a badge: its subject, status and color along with SVG generated basing
@@ -36,7 +38,7 @@ defmodule Badging.Badge do
   def svg_changeset(struct, params) do
     struct
     |> cast(params, [:svg, :svg_downloaded_at])
-    |> put_change(:svg_downloaded_at, Ecto.DateTime.utc(:usec))
+    |> put_change(:svg_downloaded_at, DateTime.utc(:usec))
     |> validate_required([:svg])
   end
 
@@ -50,11 +52,13 @@ defmodule Badging.Badge do
       ...>   color: "yellow",
       ...>   status: "almost_done"
       ...> })
-      "https://img.shields.io/badge/RSpec_To_Minitest_Migration-almost__done-yellow.svg"
+      "https://img.shields.io/badge/" <>
+        "RSpec_To_Minitest_Migration-almost__done-yellow.svg"
   """
   def shieldsio_url(%__MODULE__{subject: subject, status: status, color: color})
     when is_binary(subject) and is_binary(status) and is_binary(color) do
-    "https://img.shields.io/badge/#{escape subject}-#{escape status}-#{escape color}.svg"
+    "https://img.shields.io/badge/" <>
+      "#{escape subject}-#{escape status}-#{escape color}.svg"
   end
 
   defp escape(str) do

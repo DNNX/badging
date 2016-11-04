@@ -16,8 +16,11 @@ defmodule Badging.Downloader do
 
   """
   def download(url) do
-    {:ok, resp} = :httpc.request(:get, {to_char_list(url), []}, [], [body_format: :binary])
-    {{_, 200, 'OK'}, _headers, body} = resp
+    {:ok, {{_, 200, 'OK'}, _headers, body}} = get(url)
     body
+  end
+
+  defp get(url) do
+    :httpc.request(:get, {to_char_list(url), []}, [], [body_format: :binary])
   end
 end
