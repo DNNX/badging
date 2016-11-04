@@ -24,10 +24,7 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :badging, Badging.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
   database: "badging_dev",
-  hostname: "localhost",
   pool_size: 10
 
 config :badging, :read_auth, [

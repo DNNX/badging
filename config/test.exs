@@ -12,10 +12,7 @@ config :logger, level: :warn
 # Configure your database
 config :badging, Badging.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
   database: "badging_test",
-  hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :badging, :read_auth, [
