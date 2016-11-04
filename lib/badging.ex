@@ -1,6 +1,10 @@
 defmodule Badging do
   use Application
 
+  @moduledoc """
+  Badging is a typical Phoenix application, nothing overly interesting there.
+  """
+
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do

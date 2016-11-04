@@ -1,6 +1,12 @@
 defmodule Badging.Badge do
   use Badging.Web, :model
 
+  @moduledoc """
+  Badging.Badge is a core model of the application. It represents an information
+  about a badge: its subject, status and color along with SVG generated basing
+  on these attributes.
+  """
+
   @derive {Phoenix.Param, key: :identifier}
   schema "badges" do
     field :identifier, :string

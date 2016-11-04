@@ -1,6 +1,12 @@
 defmodule Badging.Downloader do
+  @moduledoc """
+  Badging.Downloader provides a utility function `Badging.Dowloader.download/1`
+  which makes an HTTP GET request by a given URL and returns response body.
+  """
+
   @doc ~S"""
   Downloads a given URL and returns response body as a binary.
+  Fails if response code is not 200.
 
   ## Examples:
 
