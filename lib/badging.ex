@@ -14,7 +14,7 @@ defmodule Badging do
       supervisor(Badging.Endpoint, []),
       # Start your own worker by calling: Badging.Worker.start_link(arg1, arg2, arg3)
       # worker(Badging.Worker, [arg1, arg2, arg3]),
-      supervisor(Task.Supervisor, [[name: Badging.SvgDownloaderSupervisor]])
+      supervisor(Task.Supervisor, [[name: Badging.SvgDownloaderSupervisor, restart: :transient]])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
