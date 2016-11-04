@@ -12,7 +12,7 @@ defmodule HelloWorldWebServer do
     :inets.start(:httpd, args, :stand_alone)
   end
 
-  def unquote(:do)(data) do
+  def unquote(:do)(_data) do
     {:proceed, [{:response, {200, 'Hello, World!'}}]}
   end
 end
