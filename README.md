@@ -1,8 +1,8 @@
-# Badging
+# [![Build Status](https://travis-ci.org/DNNX/badging.svg?branch=master)](https://travis-ci.org/DNNX/badging) Badging
 
 The best way to explain what is Badging is by example.
 
-Very often, OSS developers keep track of different metrics via so called "badges" - small images at the top of a repo Readme. There are many services that provide
+Very often, OSS developers keep track of different metrics via so called "badges" - status images at the top of a repo Readme. There are many services that provide
 repository status as a badge: Travis CI, Code Climate, and many more.
 
 However, sometimes the metric you want to display on a badge is something that
