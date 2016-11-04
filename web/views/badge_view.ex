@@ -15,6 +15,7 @@ defmodule Badging.BadgeView do
       subject: badge.subject,
       status: badge.status,
       color: badge.color,
-      svg: badge.svg}
+      svg: badge.svg
+    }
   end
 end
