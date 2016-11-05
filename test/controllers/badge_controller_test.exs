@@ -16,7 +16,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get_authenticated(conn, "/badges")
+    conn = get(conn, "/badges", token: valid_read_token)
 
     assert json_response(conn, 200)["data"] == []
   end
@@ -24,7 +24,7 @@ defmodule Badging.BadgeControllerTest do
   test "shows chosen resource", %{conn: conn} do
     badge = Repo.insert! valid_badge
 
-    conn = get_authenticated(conn, "/badges/coverage")
+    conn = get(conn, "/badges/coverage", token: valid_read_token)
 
     assert json_response(conn, 200)["data"] == %{
       "id" => badge.id,
@@ -39,7 +39,7 @@ defmodule Badging.BadgeControllerTest do
   test "renders SVG when it's available", %{conn: conn} do
     Repo.insert! valid_badge_with_svg
 
-    conn = get_authenticated(conn, "/badges/coverage.svg")
+    conn = get(conn, "/badges/coverage.svg", token: valid_read_token)
 
     assert conn.resp_body == "<svg />"
     assert get_header(conn, "content-type") == "image/svg+xml"
@@ -58,13 +58,13 @@ defmodule Badging.BadgeControllerTest do
     Repo.insert! valid_badge
 
     assert_error_sent 404, fn ->
-      get_authenticated(conn, "/badges/coverage.svg")
+      get(conn, "/badges/coverage.svg", token: valid_read_token)
     end
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get_authenticated(conn, "/badges/dont_exist.svg")
+      get(conn, "/badges/dont_exist.svg", token: valid_read_token)
     end
   end
 
@@ -164,8 +164,8 @@ defmodule Badging.BadgeControllerTest do
     put_req_header(conn, "authorization", header_content)
   end
 
-  defp get_authenticated(conn, path) do
-    read_auth_token = Application.get_env(:badging, :read_auth_token)
-    get(conn, path, token: read_auth_token)
+  defp valid_read_token do
+    Application.get_env(:badging, :read_auth_token) ||
+      raise "read_auth_token not set"
   end
 end
