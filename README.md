@@ -40,8 +40,8 @@ $ curl -H 'Content-Type: application/json' \
 
 # GET BADGE
 
-$ export READ_AUTH_PASSWORD=wz94aoKA32QMdg6
-$ curl --user user:$READ_AUTH_PASSWORD $BADGING_URL/badges/rspecing.svg
+$ export READ_AUTH_TOKEN=wz94aoKA32QMdg6
+$ curl $BADGING_URL/badges/rspecing.svg?token=$READ_AUTH_TOKEN
 <svg xmlns="http://www.w3.org/2000/svg" width="148" height="20"><linear...
 
 # UPDATE BADGE
@@ -57,9 +57,9 @@ Going back to our example, here is how you could add the badge showing RSpec
 migration progress which updates automatically as code evolves:
 
 1. Deploy Badging to Heroku or any other suitable hosting.
-2. Configure randomly generated `READ_AUTH_PASSWORD` and `WRITE_AUTH_PASSWORD`.
+2. Configure randomly generated `READ_AUTH_TOKEN` and `WRITE_AUTH_PASSWORD`.
 3. Create a badge via curl request or directly via DB insert.
-4. Add `![](https://user:<READ_AUTH_PASSWORD>@<BADGING_HOST>/badge/<identifier of creatd badge>)` to your repo readme.
+4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>).svg?token=<READ_AUTH_TOKEN>` to your repo Readme.
 5. Create a script which would send a PATCH request to your Badging server
    each time a pull request is merged to your integration branch. You can call
    it from your CI server after each green build, for example. In our case,
@@ -94,8 +94,8 @@ Local read/write passwords are in `config/dev.exs`.
 # Assuming you already created a new Heroku app and cd'ed to the project directory
 heroku create --buildpack "https://github.com/HashNuke/heroku-buildpack-elixir.git"
 heroku config:set POOL_SIZE=18 \
-                  READ_AUTH_PASSWORD=<randomly generated password> \
-                  WRITE_AUTH_PASSWORD=<any other random password> \
+                  READ_AUTH_TOKEN=<randomly generated string> \
+                  WRITE_AUTH_PASSWORD=<any other random string> \
                   SECRET_KEY_BASE=`mix phoenix.gen.secret`
 
 git push heroku master

@@ -1,12 +1,12 @@
 defmodule Badging.BadgeController do
   use Badging.Web, :controller
 
-  alias Badging.{Badge,Downloader}
+  alias Badging.{Badge,Downloader,TokenAuth}
 
   @downloader Application.get_env(:badging, :downloader, Downloader)
   @write_actions [:create, :update, :delete]
 
-  plug BasicAuth, Application.get_env(:badging, :read_auth)
+  plug TokenAuth, Application.get_env(:badging, :read_auth_token)
     when not action in @write_actions
   plug BasicAuth, Application.get_env(:badging, :write_auth)
     when action in @write_actions

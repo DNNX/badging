@@ -15,11 +15,7 @@ config :badging, Badging.Repo,
   database: "badging_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :badging, :read_auth, [
-  realm: "Restricted Area",
-  username: "user",
-  password: "REA&DPASS0DR"
-]
+config :badging, :read_auth_token, "s3cr3t"
 
 config :badging, :write_auth, [
   realm: "Restricted Area",
