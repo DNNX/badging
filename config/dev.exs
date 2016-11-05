@@ -27,5 +27,6 @@ config :badging, Badging.Repo,
   database: "badging_dev",
   pool_size: 10
 
-config :badging, :read_auth_token, "s4cr4t"
-config :badging, :write_auth_token, "DQEA&DPASS0DR"
+config :badging, :token,
+  read: "s4cr4t",
+  write: "SKAZLJLJHXX"

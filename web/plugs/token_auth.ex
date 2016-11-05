@@ -15,13 +15,13 @@ defmodule Badging.TokenAuth do
   allowed. Otherwise, `conn` is halted and 403 Forbidden is sent.
   """
 
-  def init(read_auth_token) do
-    read_auth_token
+  def init(token) when is_binary(token) do
+    token
   end
 
-  def call(conn, read_auth_token) do
+  def call(conn, token) do
     case conn.params["token"] do
-      ^read_auth_token -> conn
+      ^token -> conn
       _ ->
         conn
         |> send_resp(403, "Forbidden")

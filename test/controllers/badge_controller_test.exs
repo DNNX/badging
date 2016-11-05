@@ -16,7 +16,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "lists all entries on index", %{conn: conn} do
-    conn = get(conn, "/badges", token: valid_read_token)
+    conn = get(conn, "/badges", token: valid_token(:read))
 
     assert json_response(conn, 200)["data"] == []
   end
@@ -24,7 +24,7 @@ defmodule Badging.BadgeControllerTest do
   test "shows chosen resource", %{conn: conn} do
     badge = Repo.insert! valid_badge
 
-    conn = get(conn, "/badges/coverage", token: valid_read_token)
+    conn = get(conn, "/badges/coverage", token: valid_token(:read))
 
     assert json_response(conn, 200)["data"] == %{
       "id" => badge.id,
@@ -39,7 +39,7 @@ defmodule Badging.BadgeControllerTest do
   test "renders SVG when it's available", %{conn: conn} do
     Repo.insert! valid_badge_with_svg
 
-    conn = get(conn, "/badges/coverage.svg", token: valid_read_token)
+    conn = get(conn, "/badges/coverage.svg", token: valid_token(:read))
 
     assert conn.resp_body == "<svg />"
     assert get_header(conn, "content-type") == "image/svg+xml"
@@ -58,20 +58,20 @@ defmodule Badging.BadgeControllerTest do
     Repo.insert! valid_badge
 
     assert_error_sent 404, fn ->
-      get(conn, "/badges/coverage.svg", token: valid_read_token)
+      get(conn, "/badges/coverage.svg", token: valid_token(:read))
     end
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
     assert_error_sent 404, fn ->
-      get(conn, "/badges/dont_exist.svg", token: valid_read_token)
+      get(conn, "/badges/dont_exist.svg", token: valid_token(:read))
     end
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn =
       conn
-      |> post("/badges", badge: @valid_attrs, token: valid_write_token)
+      |> post("/badges", badge: @valid_attrs, token: valid_token(:write))
 
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
@@ -80,7 +80,7 @@ defmodule Badging.BadgeControllerTest do
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
     conn =
       conn
-      |> post("/badges", badge: @invalid_attrs, token: valid_write_token)
+      |> post("/badges", badge: @invalid_attrs, token: valid_token(:write))
 
     assert json_response(conn, 422)["errors"] != %{}
   end
@@ -90,7 +90,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> put("/badges/coverage", badge: @valid_attrs, token: valid_write_token)
+      |> put("/badges/coverage", badge: @valid_attrs, token: valid_token(:write))
 
     assert json_response(conn, 200)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
@@ -101,7 +101,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> put("/badges/coverage", badge: @invalid_attrs, token: valid_write_token)
+      |> put("/badges/coverage", badge: @invalid_attrs, token: valid_token(:write))
 
     assert json_response(conn, 422)["errors"] != %{}
   end
@@ -111,7 +111,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> delete("/badges/coverage", token: valid_write_token)
+      |> delete("/badges/coverage", token: valid_token(:write))
 
     assert response(conn, 204)
     refute Repo.one(Badge, identifier: "coverage")
@@ -149,13 +149,8 @@ defmodule Badging.BadgeControllerTest do
     Ecto.DateTime.from_erl(:calendar.universal_time)
   end
 
-  defp valid_read_token do
-    Application.get_env(:badging, :read_auth_token) ||
-      raise "read_auth_token not set"
-  end
-
-  defp valid_write_token do
-    Application.get_env(:badging, :write_auth_token) ||
-      raise "write_auth_token not set"
+  defp valid_token(mode) do
+    Application.get_env(:badging, :token)
+    |> Keyword.fetch!(mode)
   end
 end

@@ -5,11 +5,10 @@ defmodule Badging.BadgeController do
 
   @downloader Application.get_env(:badging, :downloader, Downloader)
   @write_actions [:create, :update, :delete]
+  @token Application.get_env(:badging, :token)
 
-  plug TokenAuth, Application.get_env(:badging, :read_auth_token)
-    when not action in @write_actions
-  plug TokenAuth, Application.get_env(:badging, :write_auth_token)
-    when action in @write_actions
+  plug TokenAuth, @token[:write] when action in @write_actions
+  plug TokenAuth, @token[:read] when not action in @write_actions
 
   def index(conn, _params) do
     badges = Repo.all(Badge)

@@ -24,13 +24,9 @@ config :badging, Badging.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
-read_auth_token = System.get_env("READ_TOKEN") || raise "READ_TOKEN is not set"
-
-config :badging, :read_auth_token, read_auth_token
-
-config :badging,
-  :write_auth_token,
-  System.get_env("WRITE_TOKEN") || raise "WRITE_TOKEN is not set"
+config :badging, :token,
+  read: (System.get_env("READ_TOKEN") || raise "READ_TOKEN is not set"),
+  write: (System.get_env("WRITE_TOKEN") || raise "WRITE_TOKEN is not set")
 
 # Do not print debug messages in production
 config :logger, level: :info

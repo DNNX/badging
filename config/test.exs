@@ -15,6 +15,8 @@ config :badging, Badging.Repo,
   database: "badging_test",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :badging, :read_auth_token, "s3cr3t"
-config :badging, :write_auth_token, "QEA&DPASS0DR"
+config :badging, :token,
+  read: "s3cr3t",
+  write: "QEA&DPASS0DR"
+
 config :badging, :downloader, Badging.StubbedDownloader
