@@ -28,9 +28,4 @@ config :badging, Badging.Repo,
   pool_size: 10
 
 config :badging, :read_auth_token, "s4cr4t"
-
-config :badging, :write_auth, [
-  realm: "Restricted Area",
-  username: "user",
-  password: "DQEA&DPASS0DR"
-]
+config :badging, :write_auth_token, "DQEA&DPASS0DR"

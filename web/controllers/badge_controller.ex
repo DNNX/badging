@@ -8,7 +8,7 @@ defmodule Badging.BadgeController do
 
   plug TokenAuth, Application.get_env(:badging, :read_auth_token)
     when not action in @write_actions
-  plug BasicAuth, Application.get_env(:badging, :write_auth)
+  plug TokenAuth, Application.get_env(:badging, :write_auth_token)
     when action in @write_actions
 
   def index(conn, _params) do

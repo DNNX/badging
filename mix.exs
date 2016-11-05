@@ -36,7 +36,6 @@ defmodule Badging.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:basic_auth, "~> 1.0"},
      {:credo, "~> 0.4", only: [:dev, :test]}]
   end
 

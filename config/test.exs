@@ -16,11 +16,5 @@ config :badging, Badging.Repo,
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :badging, :read_auth_token, "s3cr3t"
-
-config :badging, :write_auth, [
-  realm: "Restricted Area",
-  username: "user",
-  password: "QEA&DPASS0DR"
-]
-
+config :badging, :write_auth_token, "QEA&DPASS0DR"
 config :badging, :downloader, Badging.StubbedDownloader

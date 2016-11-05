@@ -71,8 +71,7 @@ defmodule Badging.BadgeControllerTest do
   test "creates and renders resource when data is valid", %{conn: conn} do
     conn =
       conn
-      |> authenticated(:write_auth)
-      |> post("/badges", badge: @valid_attrs)
+      |> post("/badges", badge: @valid_attrs, token: valid_write_token)
 
     assert json_response(conn, 201)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
@@ -81,8 +80,7 @@ defmodule Badging.BadgeControllerTest do
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
     conn =
       conn
-      |> authenticated(:write_auth)
-      |> post("/badges", badge: @invalid_attrs)
+      |> post("/badges", badge: @invalid_attrs, token: valid_write_token)
 
     assert json_response(conn, 422)["errors"] != %{}
   end
@@ -92,8 +90,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> authenticated(:write_auth)
-      |> put("/badges/coverage", badge: @valid_attrs)
+      |> put("/badges/coverage", badge: @valid_attrs, token: valid_write_token)
 
     assert json_response(conn, 200)["data"]["id"]
     assert Repo.get_by(Badge, @valid_attrs)
@@ -104,8 +101,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> authenticated(:write_auth)
-      |> put("/badges/coverage", badge: @invalid_attrs)
+      |> put("/badges/coverage", badge: @invalid_attrs, token: valid_write_token)
 
     assert json_response(conn, 422)["errors"] != %{}
   end
@@ -115,8 +111,7 @@ defmodule Badging.BadgeControllerTest do
 
     conn =
       conn
-      |> authenticated(:write_auth)
-      |> delete("/badges/coverage")
+      |> delete("/badges/coverage", token: valid_write_token)
 
     assert response(conn, 204)
     refute Repo.one(Badge, identifier: "coverage")
@@ -154,18 +149,13 @@ defmodule Badging.BadgeControllerTest do
     Ecto.DateTime.from_erl(:calendar.universal_time)
   end
 
-  defp authenticated(conn, auth_key) do
-    config = Application.get_env(:badging, auth_key)
-    username = Keyword.fetch!(config, :username)
-    password = Keyword.fetch!(config, :password)
-
-    header_content = "Basic " <> Base.encode64("#{username}:#{password}")
-
-    put_req_header(conn, "authorization", header_content)
-  end
-
   defp valid_read_token do
     Application.get_env(:badging, :read_auth_token) ||
       raise "read_auth_token not set"
+  end
+
+  defp valid_write_token do
+    Application.get_env(:badging, :write_auth_token) ||
+      raise "write_auth_token not set"
   end
 end

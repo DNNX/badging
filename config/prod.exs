@@ -24,17 +24,13 @@ config :badging, Badging.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
-read_auth_token = System.get_env("READ_AUTH_TOKEN") || raise "READ_AUTH_TOKEN is not set"
+read_auth_token = System.get_env("READ_TOKEN") || raise "READ_TOKEN is not set"
 
 config :badging, :read_auth_token, read_auth_token
 
-write_auth_password = System.get_env("WRITE_AUTH_PASSWORD") || raise "WRITE_AUTH_PASSWORD is not set"
-
-config :badging, :write_auth, [
-  realm: "Restricted Area",
-  username: "user",
-  password: write_auth_password
-]
+config :badging,
+  :write_auth_token,
+  System.get_env("WRITE_TOKEN") || raise "WRITE_TOKEN is not set"
 
 # Do not print debug messages in production
 config :logger, level: :info

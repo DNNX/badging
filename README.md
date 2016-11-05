@@ -2,7 +2,8 @@
 
 The best way to explain what is Badging is by example.
 
-Very often, OSS developers keep track of different metrics via so called "badges" - status images at the top of a repo Readme. There are many services that provide
+Very often, OSS developers keep track of different metrics via so called "badges" -
+status images at the top of a repo Readme. There are many services that provide
 repository status as a badge: Travis CI, Code Climate, and many more.
 
 However, sometimes the metric you want to display on a badge is something that
@@ -30,36 +31,35 @@ and cache badge SVG.
 ```bash
 # CREATE BADGE
 
-$  export WRITE_AUTH_PASSWORD=wz94aoKA32QMdg6JeC
+$  export WRITE_TOKEN=wz94aoKA32QMdg6JeC
 $ export BADGING_URL=https://badging.herokuapp.com
 $ curl -H 'Content-Type: application/json' \
-       --user user:$WRITE_AUTH_PASSWORD \
        -X POST \
        $BADGING_URL/badges \
-       --data '{"badge": {"subject": "RSpecing Progress", "status": "83%", "identifier": "rspecing", "color": "yellow"}}'
+       --data '{"token": "'$WRITE_TOKEN'", "badge": {"subject": "RSpecing Progress", "status": "83%", "identifier": "rspecing", "color": "yellow"}}'
 
 # GET BADGE
 
-$ export READ_AUTH_TOKEN=wz94aoKA32QMdg6
-$ curl $BADGING_URL/badges/rspecing.svg?token=$READ_AUTH_TOKEN
+$ export READ_TOKEN=wz94aoKA32QMdg6
+$ curl $BADGING_URL/badges/rspecing.svg?token=$READ_TOKEN
 <svg xmlns="http://www.w3.org/2000/svg" width="148" height="20"><linear...
 
 # UPDATE BADGE
 
 $ curl -H 'Content-Type: application/json' \
-       --user user:$WRITE_AUTH_PASSWORD \
+       --user user:$WRITE_TOKEN \
        -X PATCH \
        $BADGING_URL/badges/rspecing \
-       --data '{"badge": {"subject": "RSpecing Progress", "status": "95%", "identifier": "rspecing", "color": "green"}}'
+       --data '{"token": "'$WRITE_TOKEN'", "badge": {"subject": "RSpecing Progress", "status": "95%", "identifier": "rspecing", "color": "green"}}'
 ```
 
 Going back to our example, here is how you could add the badge showing RSpec
 migration progress which updates automatically as code evolves:
 
 1. Deploy Badging to Heroku or any other suitable hosting.
-2. Configure randomly generated `READ_AUTH_TOKEN` and `WRITE_AUTH_PASSWORD`.
+2. Configure randomly generated `READ_TOKEN` and `WRITE_TOKEN`.
 3. Create a badge via curl request or directly via DB insert.
-4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>).svg?token=<READ_AUTH_TOKEN>` to your repo Readme.
+4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>).svg?token=<READ_TOKEN>` to your repo Readme.
 5. Create a script which would send a PATCH request to your Badging server
    each time a pull request is merged to your integration branch. You can call
    it from your CI server after each green build, for example. In our case,
@@ -94,8 +94,8 @@ Local read/write passwords are in `config/dev.exs`.
 # Assuming you already created a new Heroku app and cd'ed to the project directory
 heroku create --buildpack "https://github.com/HashNuke/heroku-buildpack-elixir.git"
 heroku config:set POOL_SIZE=18 \
-                  READ_AUTH_TOKEN=<randomly generated string> \
-                  WRITE_AUTH_PASSWORD=<any other random string> \
+                  READ_TOKEN=<randomly generated string> \
+                  WRITE_TOKEN=<any other random string> \
                   SECRET_KEY_BASE=`mix phoenix.gen.secret`
 
 git push heroku master
