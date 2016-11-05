@@ -166,6 +166,6 @@ defmodule Badging.BadgeControllerTest do
 
   defp get_authenticated(conn, path) do
     read_auth_token = Application.get_env(:badging, :read_auth_token)
-    get(conn, path <> "?" <> URI.encode_query([token: read_auth_token]))
+    get(conn, path, token: read_auth_token)
   end
 end
