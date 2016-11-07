@@ -59,7 +59,7 @@ migration progress which updates automatically as code evolves:
 1. Deploy Badging to Heroku or any other suitable hosting.
 2. Configure randomly generated `READ_TOKEN` and `WRITE_TOKEN`.
 3. Create a badge via curl request or directly via DB insert.
-4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>).svg?token=<READ_TOKEN>` to your repo Readme.
+4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>.svg?token=<READ_TOKEN>)` to your repo Readme.
 5. Create a script which would send a PATCH request to your Badging server
    each time a pull request is merged to your integration branch. You can call
    it from your CI server after each green build, for example. In our case,
