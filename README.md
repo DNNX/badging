@@ -9,7 +9,7 @@ repository status as a badge: Travis CI, Code Climate, and many more.
 However, sometimes the metric you want to display on a badge is something that
 external services do not provide.
 
-For example, let's imagine a situation when you are in the process of a from
+For example, let's imagine a situation when you are in the process of a migration from
 [MiniTest](https://github.com/seattlerb/minitest) to [RSpec](https://github.com/rspec/rspec)
 or vice versa. If your code base is large, it will take considerable amount of
 time and it's desirable to track progress of this migration.
