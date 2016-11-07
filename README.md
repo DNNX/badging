@@ -31,7 +31,7 @@ and cache badge SVG.
 ```bash
 # CREATE BADGE
 
-$  export WRITE_TOKEN=wz94aoKA32QMdg6JeC
+$ export WRITE_TOKEN=wz94aoKA32QMdg6JeC
 $ export BADGING_URL=https://badging.herokuapp.com
 $ curl -H 'Content-Type: application/json' \
        -X POST \
