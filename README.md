@@ -32,7 +32,7 @@ and cache badge SVG.
 # CREATE BADGE
 
 $  export WRITE_TOKEN=wz94aoKA32QMdg6JeC
-$ export BADGING_URL=https://badging.herokuapp.com
+$ export BADGING_URL=https://<your badging host>
 $ curl -H 'Content-Type: application/json' \
        -X POST \
        $BADGING_URL/badges \
@@ -59,7 +59,7 @@ migration progress which updates automatically as code evolves:
 1. Deploy Badging to Heroku or any other suitable hosting.
 2. Configure randomly generated `READ_TOKEN` and `WRITE_TOKEN`.
 3. Create a badge via curl request or directly via DB insert.
-4. Add `![](https://<BADGING_HOST>/badge/<identifier of created badge>.svg?token=<READ_TOKEN>)` to your repo Readme.
+4. Add `![](<BADGING_URL>/badge/<identifier of created badge>.svg?token=<READ_TOKEN>)` to your repo Readme.
 5. Create a script which would send a PATCH request to your Badging server
    each time a pull request is merged to your integration branch. You can call
    it from your CI server after each green build, for example. In our case,
@@ -96,6 +96,7 @@ heroku create --buildpack "https://github.com/HashNuke/heroku-buildpack-elixir.g
 heroku config:set POOL_SIZE=18 \
                   READ_TOKEN=<randomly generated string> \
                   WRITE_TOKEN=<any other random string> \
+                  HOST=<your badging host> \
                   SECRET_KEY_BASE=`mix phoenix.gen.secret`
 
 git push heroku master

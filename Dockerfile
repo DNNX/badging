@@ -1,10 +1,15 @@
 FROM elixir:1.3.0
+ARG POOL_SIZE
+ARG READ_TOKEN
+ARG WRITE_TOKEN
+ARG HOST
 
 ENV MIX_ENV=prod
 ENV PORT=80
-ENV POOL_SIZE=18
-ENV READ_TOKEN=dummy-token
-ENV WRITE_TOKEN=dummy-token
+ENV POOL_SIZE ${POOL_SIZE:-10}
+ENV READ_TOKEN ${READ_TOKEN}
+ENV WRITE_TOKEN ${WRITE_TOKEN}
+ENV HOST ${HOST}
 WORKDIR /app
 
 ADD . /app
@@ -14,4 +19,4 @@ RUN mix compile
 RUN mix phoenix.digest
 
 EXPOSE 80
-CMD mix phoenix.server
+CMD mix ecto.migrate && mix phoenix.server
