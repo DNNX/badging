@@ -36,5 +36,7 @@ defmodule Badging.Endpoint do
     key: "_badging_key",
     signing_salt: "HEqBDa+2"
 
+  plug CORSPlug, Application.get_env(:badging, :cors, [])
+
   plug Badging.Router
 end

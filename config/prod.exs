@@ -28,6 +28,9 @@ config :badging, :token,
   read: (System.get_env("READ_TOKEN") || raise "READ_TOKEN is not set"),
   write: (System.get_env("WRITE_TOKEN") || raise "WRITE_TOKEN is not set")
 
+config :badging, :cors,
+  origin: (System.get_env("CORS_ALLOWED_ORIGIN") || "*")
+
 # Do not print debug messages in production
 config :logger, level: :info
 

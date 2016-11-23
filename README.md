@@ -101,3 +101,12 @@ heroku config:set POOL_SIZE=18 \
 
 git push heroku master
 ```
+
+## CORS
+
+By default, requests from all origins are allowed. If you want to whitelist the
+allowed domains, set `CORS_ALLOWED_ORIGIN` instance variable. For example:
+
+```bash
+heroku config:set CORS_ALLOWED_ORIGIN=https://github.com
+```
