@@ -1,7 +1,7 @@
 defmodule Badging.BadgeController do
   use Badging.Web, :controller
 
-  alias Badging.{Badge,Downloader,TokenAuth}
+  alias Badging.{Badge, Downloader, TokenAuth}
 
   @downloader Application.get_env(:badging, :downloader, Downloader)
   @write_actions [:create, :update, :delete]
