@@ -22,7 +22,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    badge = Repo.insert! valid_badge
+    badge = Repo.insert! valid_badge()
 
     conn = get(conn, "/badges/coverage", token: valid_token(:read))
 
@@ -37,7 +37,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "renders SVG when it's available", %{conn: conn} do
-    Repo.insert! valid_badge_with_svg
+    Repo.insert! valid_badge_with_svg()
 
     conn = get(conn, "/badges/coverage.svg", token: valid_token(:read))
 
@@ -46,7 +46,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "renders 403 when not authed", %{conn: conn} do
-    Repo.insert! valid_badge_with_svg
+    Repo.insert! valid_badge_with_svg()
 
     conn = get(conn, "/badges/coverage.svg")
 
@@ -55,7 +55,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "renders 404 when SVG is not available", %{conn: conn} do
-    Repo.insert! valid_badge
+    Repo.insert! valid_badge()
 
     assert_error_sent 404, fn ->
       get(conn, "/badges/coverage.svg", token: valid_token(:read))
@@ -86,7 +86,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    Repo.insert! valid_badge
+    Repo.insert! valid_badge()
 
     conn =
       conn
@@ -97,7 +97,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-     Repo.insert! valid_badge
+     Repo.insert! valid_badge()
 
     conn =
       conn
@@ -107,7 +107,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    Repo.insert! valid_badge
+    Repo.insert! valid_badge()
 
     conn =
       conn
@@ -133,7 +133,7 @@ defmodule Badging.BadgeControllerTest do
       status: "83%",
       color: "yellow",
       svg: "<svg />",
-      svg_downloaded_at: now
+      svg_downloaded_at: now()
     }
   end
 
