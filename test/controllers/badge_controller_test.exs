@@ -146,7 +146,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   defp now do
-    Ecto.DateTime.from_erl(:calendar.universal_time)
+    DateTime.utc_now
   end
 
   defp valid_token(mode) do

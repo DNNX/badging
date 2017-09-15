@@ -1,8 +1,6 @@
 defmodule Badging.Badge do
   use Badging.Web, :model
 
-  alias Ecto.DateTime
-
   @moduledoc """
   Badging.Badge is a core model of the application. It represents an information
   about a badge: its subject, status and color along with SVG generated basing
@@ -16,7 +14,7 @@ defmodule Badging.Badge do
     field :status, :string
     field :color, :string
     field :svg, :string
-    field :svg_downloaded_at, Ecto.DateTime
+    field :svg_downloaded_at, :utc_datetime
 
     timestamps()
   end
@@ -38,7 +36,7 @@ defmodule Badging.Badge do
   def svg_changeset(struct, params) do
     struct
     |> cast(params, [:svg, :svg_downloaded_at])
-    |> put_change(:svg_downloaded_at, DateTime.utc(:usec))
+    |> put_change(:svg_downloaded_at, DateTime.utc_now)
     |> validate_required([:svg])
   end
 

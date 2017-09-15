@@ -26,6 +26,6 @@ defmodule Badging.BadgeTest do
   test "svg changeset" do
     changeset = Badge.svg_changeset(%Badge{identifier: "i18n"}, %{svg: "<svg />"})
     assert changeset.valid?
-    assert %Ecto.DateTime{} = changeset.changes.svg_downloaded_at
+    assert %DateTime{} = changeset.changes.svg_downloaded_at
   end
 end
