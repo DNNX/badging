@@ -1,4 +1,4 @@
-FROM elixir:1.3.0
+FROM elixir:1.5.1
 ARG POOL_SIZE
 ARG READ_TOKEN
 ARG WRITE_TOKEN
@@ -19,4 +19,4 @@ RUN mix compile
 RUN mix phoenix.digest
 
 EXPOSE 80
-CMD mix ecto.migrate && mix phoenix.server
+CMD mix ecto.migrate && mix phx.server

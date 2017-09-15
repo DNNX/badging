@@ -83,7 +83,7 @@ mix test
 ```
 mix deps.get
 mix ecto.create && mix ecto.migrate
-mix phoenix.server
+mix phx.server
 ```
 
 Local read/write passwords are in `config/dev.exs`.
