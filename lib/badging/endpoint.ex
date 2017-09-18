@@ -25,7 +25,6 @@ defmodule Badging.Endpoint do
     pass: ["*/*"],
     json_decoder: Poison
 
-  plug Plug.MethodOverride
   plug Plug.Head
 
   plug CORSPlug, Application.get_env(:badging, :cors, [])
