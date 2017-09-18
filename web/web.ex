@@ -55,17 +55,6 @@ defmodule Badging.Web do
     end
   end
 
-  def channel do
-    quote do
-      use Phoenix.Channel
-
-      alias Badging.Repo
-      import Ecto
-      import Ecto.Query
-      import Badging.Gettext
-    end
-  end
-
   @doc """
   When used, dispatch to the appropriate controller/view/etc.
   """
