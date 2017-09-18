@@ -11,8 +11,6 @@ defmodule Badging.BadgeTest do
     subject: "Test Coverage"
   }
 
-  @invalid_attrs %{}
-
   test "changeset with valid attributes" do
     changeset = Badge.changeset(%Badge{}, @valid_attrs)
     assert changeset.valid?
