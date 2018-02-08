@@ -37,7 +37,7 @@ defmodule Badging.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:cors_plug, "~> 1.1"},
-     {:credo, "~> 0.4", only: [:dev, :test]}]
+     {:credo, github: "rrrene/credo", only: [:dev, :test]}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
