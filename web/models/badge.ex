@@ -48,10 +48,10 @@ defmodule Badging.Badge do
       iex> Badging.Badge.shieldsio_url(%Badging.Badge{
       ...>   subject: "RSpec To Minitest Migration",
       ...>   color: "yellow",
-      ...>   status: "almost_done"
+      ...>   status: "almost_done (99%)"
       ...> })
       "https://img.shields.io/badge/" <>
-        "RSpec_To_Minitest_Migration-almost__done-yellow.svg"
+        "RSpec_To_Minitest_Migration-almost__done_(99%25)-yellow.svg"
   """
   def shieldsio_url(%__MODULE__{subject: subject, status: status, color: color})
     when is_binary(subject) and is_binary(status) and is_binary(color) do
@@ -64,5 +64,6 @@ defmodule Badging.Badge do
     |> String.replace("-", "--")
     |> String.replace("_", "__")
     |> String.replace(" ", "_")
+    |> URI.encode
   end
 end
