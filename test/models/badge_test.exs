@@ -17,7 +17,8 @@ defmodule Badging.BadgeTest do
   end
 
   test "validates identifier presence" do
-    changeset = Badge.changeset(%Badge{}, Map.put(@valid_attrs, :identifier, ""))
+    attributes = Map.put(@valid_attrs, :identifier, "")
+    changeset = Badge.changeset(%Badge{}, attributes)
     refute changeset.valid?
   end
 

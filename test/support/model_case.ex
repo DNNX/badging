@@ -26,10 +26,12 @@ defmodule Badging.ModelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Badging.Repo)
+    alias Ecto.Adapters.SQL.Sandbox
+
+    :ok = Sandbox.checkout(Badging.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Badging.Repo, {:shared, self()})
+      Sandbox.mode(Badging.Repo, {:shared, self()})
     end
 
     :ok
@@ -58,8 +60,12 @@ defmodule Badging.ModelCase do
       true
   """
   def errors_on(struct, data) do
-    struct.__struct__.changeset(struct, data)
-    |> Ecto.Changeset.traverse_errors(&Badging.ErrorHelpers.translate_error/1)
+    alias Ecto.Changeset
+    alias Badging.ErrorHelpers
+
+    struct
+    |> struct.__struct__.changeset(data)
+    |> Changeset.traverse_errors(&ErrorHelpers.translate_error/1)
     |> Enum.flat_map(fn {key, errors} -> for msg <- errors, do: {key, msg} end)
   end
 end

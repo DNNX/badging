@@ -1,4 +1,10 @@
 defmodule HelloWorldWebServer do
+  @moduledoc """
+  HelloWorldWebServer is a simple web server which
+  always responds with 200 OK, Hello, World!
+  It is used to test the downloader.
+  """
+
   def start(port) do
     args = [
       bind_address: 'localhost',

@@ -1,12 +1,13 @@
 defmodule Badging.TokenAuthTest do
   use Badging.ConnCase
+  alias Plug.Conn
 
   test "with valid token" do
     auth_token = "s3cre5"
 
     conn =
       build_conn(:get, "/?token=" <> auth_token)
-      |> Plug.Conn.fetch_query_params
+      |> Conn.fetch_query_params
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     refute conn.halted
@@ -18,7 +19,7 @@ defmodule Badging.TokenAuthTest do
 
     conn =
       build_conn(:get, "/?token=XYZXYZ" <> auth_token)
-      |> Plug.Conn.fetch_query_params
+      |> Conn.fetch_query_params
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     assert conn.halted
@@ -30,7 +31,7 @@ defmodule Badging.TokenAuthTest do
 
     conn =
       build_conn(:get, "/")
-      |> Plug.Conn.fetch_query_params
+      |> Conn.fetch_query_params
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     assert conn.halted
