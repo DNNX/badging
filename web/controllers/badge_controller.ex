@@ -1,4 +1,5 @@
 defmodule Badging.BadgeController do
+  require Logger
   use Badging.Web, :controller
 
   alias Badging.{Badge, Downloader, TokenAuth}
@@ -85,10 +86,10 @@ defmodule Badging.BadgeController do
 
   defp download_svg_async(%Badge{} = badge) do
     Task.Supervisor.start_child Badging.SvgDownloaderSupervisor, fn ->
-      svg =
-        badge
-        |> Badge.shieldsio_url
-        |> @downloader.download
+      url = Badge.shieldsio_url(badge)
+      Logger.info "Downloading #{url}"
+
+      svg = @downloader.download(url)
 
       changeset = Badge.svg_changeset(badge, %{svg: svg})
       Repo.update!(changeset)
