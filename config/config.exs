@@ -13,9 +13,7 @@ config :badging,
 config :badging, Badging.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "RIPmOBOcJv1G3D8N/s6dEhnincUTrS8nYJE8UwgJfhYjkTsighk7mPV1ODOEYDv6",
-  render_errors: [view: Badging.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Badging.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: Badging.ErrorView, accepts: ~w(json)]
 
 # Configures Elixir's Logger
 config :logger, :console,
