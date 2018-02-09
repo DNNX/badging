@@ -1,7 +1,7 @@
 defmodule Badging do
   use Application
 
-  alias Badging.Endpoint
+  alias Badging.{SvgDownloaderSupervisor, Endpoint}
 
   @moduledoc """
   Badging is a typical Phoenix application, nothing overly interesting there.
@@ -10,22 +10,31 @@ defmodule Badging do
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec
-
     # Define workers and child supervisors to be supervised
     children = [
-      supervisor(Badging.Repo, []),
-      supervisor(Badging.Endpoint, []),
-      supervisor(
-        Task.Supervisor,
-        [[name: Badging.SvgDownloaderSupervisor, restart: :transient]]
-      )
+      repo_supervisor_spec(),
+      endpoint_supervisor_spec(),
+      svg_downloader_supervisor_spec()
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Badging.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  defp repo_supervisor_spec do
+    Supervisor.Spec.supervisor(Badging.Repo, [])
+  end
+
+  defp endpoint_supervisor_spec do
+    Supervisor.Spec.supervisor(Badging.Endpoint, [])
+  end
+
+  def svg_downloader_supervisor_spec do
+    Supervisor.Spec.supervisor(Task.Supervisor, [
+      [name: SvgDownloaderSupervisor, restart: :transient]
+    ])
   end
 
   # Tell Phoenix to update the endpoint configuration

@@ -6,8 +6,7 @@
 use Mix.Config
 
 # General application configuration
-config :badging,
-  ecto_repos: [Badging.Repo]
+config :badging, ecto_repos: [Badging.Repo]
 
 # Configures the endpoint
 config :badging, Badging.Endpoint,
@@ -22,4 +21,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

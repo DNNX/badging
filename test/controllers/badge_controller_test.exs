@@ -22,22 +22,22 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    badge = Repo.insert! valid_badge()
+    badge = Repo.insert!(valid_badge())
 
     conn = get(conn, "/badges/coverage", token: valid_token(:read))
 
     assert json_response(conn, 200)["data"] == %{
-      "id" => badge.id,
-      "identifier" => badge.identifier,
-      "subject" => badge.subject,
-      "status" => badge.status,
-      "color" => badge.color,
-      "svg" => badge.svg
-    }
+             "id" => badge.id,
+             "identifier" => badge.identifier,
+             "subject" => badge.subject,
+             "status" => badge.status,
+             "color" => badge.color,
+             "svg" => badge.svg
+           }
   end
 
   test "renders SVG when it's available", %{conn: conn} do
-    Repo.insert! valid_badge_with_svg()
+    Repo.insert!(valid_badge_with_svg())
 
     conn = get(conn, "/badges/coverage.svg", token: valid_token(:read))
 
@@ -46,7 +46,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "renders 403 when not authed", %{conn: conn} do
-    Repo.insert! valid_badge_with_svg()
+    Repo.insert!(valid_badge_with_svg())
 
     conn = get(conn, "/badges/coverage.svg")
 
@@ -55,17 +55,17 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "renders 404 when SVG is not available", %{conn: conn} do
-    Repo.insert! valid_badge()
+    Repo.insert!(valid_badge())
 
-    assert_error_sent 404, fn ->
+    assert_error_sent(404, fn ->
       get(conn, "/badges/coverage.svg", token: valid_token(:read))
-    end
+    end)
   end
 
   test "renders page not found when id is nonexistent", %{conn: conn} do
-    assert_error_sent 404, fn ->
+    assert_error_sent(404, fn ->
       get(conn, "/badges/dont_exist.svg", token: valid_token(:read))
-    end
+    end)
   end
 
   test "creates and renders resource when data is valid", %{conn: conn} do
@@ -86,7 +86,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "updates and renders chosen resource when data is valid", %{conn: conn} do
-    Repo.insert! valid_badge()
+    Repo.insert!(valid_badge())
 
     conn =
       conn
@@ -97,7 +97,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-     Repo.insert! valid_badge()
+    Repo.insert!(valid_badge())
 
     conn =
       conn
@@ -107,7 +107,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    Repo.insert! valid_badge()
+    Repo.insert!(valid_badge())
 
     conn =
       conn
@@ -146,7 +146,7 @@ defmodule Badging.BadgeControllerTest do
   end
 
   defp now do
-    DateTime.utc_now
+    DateTime.utc_now()
   end
 
   defp valid_token(mode) do

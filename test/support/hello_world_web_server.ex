@@ -15,6 +15,7 @@ defmodule HelloWorldWebServer do
       server_root: '.',
       document_root: '.'
     ]
+
     :inets.start(:httpd, args, :stand_alone)
   end
 

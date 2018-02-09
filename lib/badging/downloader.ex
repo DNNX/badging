@@ -21,6 +21,6 @@ defmodule Badging.Downloader do
   end
 
   defp get(url) do
-    :httpc.request(:get, {to_charlist(url), []}, [], [body_format: :binary])
+    :httpc.request(:get, {to_charlist(url), []}, [], body_format: :binary)
   end
 end

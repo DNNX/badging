@@ -7,7 +7,7 @@ defmodule Badging.TokenAuthTest do
 
     conn =
       build_conn(:get, "/?token=" <> auth_token)
-      |> Conn.fetch_query_params
+      |> Conn.fetch_query_params()
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     refute conn.halted
@@ -19,7 +19,7 @@ defmodule Badging.TokenAuthTest do
 
     conn =
       build_conn(:get, "/?token=XYZXYZ" <> auth_token)
-      |> Conn.fetch_query_params
+      |> Conn.fetch_query_params()
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     assert conn.halted
@@ -31,7 +31,7 @@ defmodule Badging.TokenAuthTest do
 
     conn =
       build_conn(:get, "/")
-      |> Conn.fetch_query_params
+      |> Conn.fetch_query_params()
       |> pipe_through_plug(Badging.TokenAuth, auth_token)
 
     assert conn.halted
