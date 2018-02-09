@@ -3,3 +3,10 @@ elixir:
   - 1.6.1
 otp_release:
   - 20.0
+before_script:
+  - MIX_ENV=test mix ecto.create
+  - MIX_ENV=test mix ecto.migrate
+script:
+  - mix test
+  - mix credo --strict
+  - mix format --check-formatted
