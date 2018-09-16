@@ -9,7 +9,7 @@ defmodule Badging.BadgeController do
   @token Application.get_env(:badging, :token)
 
   plug TokenAuth, @token[:write] when action in @write_actions
-  plug TokenAuth, @token[:read] when not action in @write_actions
+  plug TokenAuth, @token[:read] when action not in @write_actions
 
   def index(conn, _params) do
     badges = Repo.all(Badge)
