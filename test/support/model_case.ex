@@ -60,8 +60,8 @@ defmodule Badging.ModelCase do
       true
   """
   def errors_on(struct, data) do
-    alias Ecto.Changeset
     alias Badging.ErrorHelpers
+    alias Ecto.Changeset
 
     struct
     |> struct.__struct__.changeset(data)

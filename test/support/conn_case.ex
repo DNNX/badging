@@ -33,8 +33,8 @@ defmodule Badging.ConnCase do
   end
 
   setup tags do
-    alias Ecto.Adapters.SQL.Sandbox
     alias Badging.Repo
+    alias Ecto.Adapters.SQL.Sandbox
     alias Phoenix.ConnTest
 
     :ok = Sandbox.checkout(Repo)

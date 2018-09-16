@@ -1,7 +1,7 @@
 defmodule Badging do
   use Application
 
-  alias Badging.{SvgDownloaderSupervisor, Endpoint}
+  alias Badging.{Endpoint, SvgDownloaderSupervisor}
 
   @moduledoc """
   Badging is a typical Phoenix application, nothing overly interesting there.
