@@ -8,8 +8,8 @@ defmodule Badging.BadgeController do
   @write_actions [:create, :update, :delete]
   @token Application.get_env(:badging, :token)
 
-  plug TokenAuth, @token[:write] when action in @write_actions
-  plug TokenAuth, @token[:read] when action not in @write_actions
+  plug(TokenAuth, @token[:write] when action in @write_actions)
+  plug(TokenAuth, @token[:read] when action not in @write_actions)
 
   def index(conn, _params) do
     badges = Repo.all(Badge)
@@ -27,10 +27,12 @@ defmodule Badging.BadgeController do
         |> put_status(:created)
         |> put_resp_header("location", badge_path(conn, :show, badge))
         |> render("show.json", badge: badge)
+
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Badging.ChangesetView, "error.json", changeset: changeset)
+        |> put_view(Badging.ChangesetView)
+        |> render("error.json", changeset: changeset)
     end
   end
 
@@ -43,10 +45,13 @@ defmodule Badging.BadgeController do
   end
 
   defp respond_with_svg(conn, badge_identifier) do
-    badge = Repo.one!(
-      from b in Badge,
-      where: not(is_nil(b.svg)) and b.identifier == ^badge_identifier,
-      select: struct(b, [:svg, :svg_downloaded_at]))
+    badge =
+      Repo.one!(
+        from(b in Badge,
+          where: not is_nil(b.svg) and b.identifier == ^badge_identifier,
+          select: struct(b, [:svg, :svg_downloaded_at])
+        )
+      )
 
     conn
     |> put_resp_content_type("image/svg+xml", nil)
@@ -67,10 +72,12 @@ defmodule Badging.BadgeController do
       {:ok, badge} ->
         download_svg_async(badge)
         render(conn, "show.json", badge: badge)
+
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Badging.ChangesetView, "error.json", changeset: changeset)
+        |> put_view(Badging.ChangesetView)
+        |> render("error.json", changeset: changeset)
     end
   end
 
@@ -85,14 +92,14 @@ defmodule Badging.BadgeController do
   end
 
   defp download_svg_async(%Badge{} = badge) do
-    Task.Supervisor.start_child Badging.SvgDownloaderSupervisor, fn ->
+    Task.Supervisor.start_child(Badging.SvgDownloaderSupervisor, fn ->
       url = Badge.shieldsio_url(badge)
-      Logger.info "Downloading #{url}"
+      Logger.info("Downloading #{url}")
 
       svg = @downloader.download(url)
 
       changeset = Badge.svg_changeset(badge, %{svg: svg})
       Repo.update!(changeset)
-    end
+    end)
   end
 end

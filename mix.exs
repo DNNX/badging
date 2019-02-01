@@ -21,7 +21,7 @@ defmodule Badging.Mixfile do
   def application do
     [
       mod: {Badging, []},
-      applications: [:phoenix, :cowboy, :logger, :gettext, :phoenix_ecto, :postgrex]
+      applications: [:phoenix, :cowboy, :logger, :gettext, :phoenix_ecto, :postgrex, :ecto_sql]
     ]
   end
 
@@ -34,13 +34,15 @@ defmodule Badging.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.3.0"},
-      {:phoenix_ecto, "~> 3.0"},
+      {:phoenix, "~> 1.4.0"},
+      {:phoenix_ecto, "~> 4.0"},
       {:postgrex, ">= 0.0.0"},
-      {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"},
-      {:cors_plug, "~> 1.5"},
-      {:credo, github: "rrrene/credo", only: [:dev, :test]}
+      {:gettext, "~> 0.16"},
+      {:cowboy, "~> 2.6"},
+      {:cors_plug, "~> 2.0"},
+      {:credo, github: "rrrene/credo", only: [:dev, :test]},
+      {:ecto_sql, "~> 3.0"},
+      {:jason, "~> 1.1.2"}
     ]
   end
 

@@ -11,7 +11,6 @@ config :logger, level: :warn
 
 # Configure your database
 config :badging, Badging.Repo,
-  adapter: Ecto.Adapters.Postgres,
   database: "badging_test",
   pool: Ecto.Adapters.SQL.Sandbox
 

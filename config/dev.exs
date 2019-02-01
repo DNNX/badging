@@ -22,7 +22,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :badging, Badging.Repo,
-  adapter: Ecto.Adapters.Postgres,
   database: "badging_dev",
   pool_size: 10
 
