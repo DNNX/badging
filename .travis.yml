@@ -1,8 +1,8 @@
 language: elixir
 elixir:
-  - 1.8.0
+  - 1.8.1
 otp_release:
-  - 21.0
+  - 21.3
 before_script:
   - MIX_ENV=test mix ecto.create
   - MIX_ENV=test mix ecto.migrate

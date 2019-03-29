@@ -39,6 +39,7 @@ defmodule Badging.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.16"},
       {:cowboy, "~> 2.6"},
+      {:plug_cowboy, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
       {:credo, github: "rrrene/credo", only: [:dev, :test]},
       {:ecto_sql, "~> 3.0"},
