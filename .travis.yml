@@ -1,4 +1,6 @@
 language: elixir
+services:
+  - postgres
 elixir:
   - 1.9.2
 otp_release:
