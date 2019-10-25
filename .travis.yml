@@ -1,8 +1,10 @@
 language: elixir
+services:
+  - postgres
 elixir:
-  - 1.8.1
+  - 1.9.2
 otp_release:
-  - 21.3
+  - 22.1
 before_script:
   - MIX_ENV=test mix ecto.create
   - MIX_ENV=test mix ecto.migrate
